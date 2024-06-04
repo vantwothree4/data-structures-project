@@ -4,7 +4,7 @@ The project consists of the following components:
 
  1) Linked Lists:
  Implementation of a singly linked list.
- Methods include printing and insertion
+ Methods include printing and insertion.
  Special operations like deleting prime nodes and merge sorting lists.
 
  2) Stacks and Queues:
