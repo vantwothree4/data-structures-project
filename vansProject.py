@@ -109,6 +109,7 @@ class Queue :
         else :
             #Queue Empty
             return None
+
 class Expression :
     operatorsList = ['+','-','*','/','^','%','(',')']
     ISP = { '(': 0, '+': 1, '-': 1, '*': 2, '%': 2, '/': 2, '^': 3, None : -1}
@@ -119,67 +120,32 @@ class Expression :
         self.expression = expression
 
     def prefixToInfix (self) :
-        operands = Stack()
-        for char in self.expression[::-1] : 
-            # starts to check expression from the Last character
-            if char in Expression.operatorsList :
-                # char is an operator
-                operand2 = operands.pop()
-                operand1 = operands.pop()
-                subExpression = f'){operand1}{char}{operand2}('
-                # we have to reverse string at end so i put )( instead of () 
-                operands.push(subExpression)
-            else :
-                # char is an operands
-                operands.push(char)
-        # end of the loop
-        operand2 = operands.pop()
-        operand1 = operands.pop()
-        while operand1 != None :
-            operand2 = f'){operand1}*{operand2}('
-            operand1 = operands.pop()
-        self.expression = operand2[::-1]
+        # reverse the expression
+        self.expression = self.expression[::-1]
+        # convert the reverse expression(postfix) to infix
+        self.postfixToInfix()
+        # reverse the result again
+        reverse = self.expression[::-1]
+        # replace '(' ')'
+        reverse = reverse.replace(')','.')
+        reverse = reverse.replace('(',')')
+        reverse = reverse.replace('.','(')
+        # reverse the result again 
+        self.expression = reverse
         self.notation = 'infix'   
 
     def infixToPrefix (self) :
-        def unstack(operator):
-            # unstack operands and create a prefix sub-Expression
-            # then save it as a new operand
-            operand2 = operands.pop()
-            operand1 = operands.pop()
-            subExpression = operator + operand1 + operand2 
-            operands.push(subExpression)
-        operands = Stack()
-        operators = Stack()
-        self.expression = f'({self.expression})'
-        # add () so the loop will unstack all the operators and operands at the end
-        for char in self.expression :
-            if char in Expression.operatorsList :
-                # char is an operator
-                if char == ')' :  # unstack till '('
-                    operator = operators.pop()
-                    while operator != '(' :
-                        unstack(operator)
-                        operator = operators.pop()
-                else : # operator is not ')'
-                    operator = operators.pop() 
-                    # check last operator's in-stack priority with char's in-coming priority
-                    while Expression.ICP[char] <= Expression.ISP[operator] :
-                        # unstack operators w more priority than char
-                        unstack(operator)
-                        operator = operators.pop()
-                    else:
-                        if operator :
-                            # push the last popped operator 
-                            operators.push(operator)
-                    # push char 
-                    operators.push(char)
-            else :
-                # char is an operand
-                operands.push(char)
-        # end of the loop 
-        # full prefix expression is at the top of operands Stack
-        self.expression = operands.pop()
+        # reverse the expression
+        reverse = self.expression[::-1]
+        # replace '(' ')'
+        reverse = reverse.replace(')','.')
+        reverse = reverse.replace('(',')')
+        reverse = reverse.replace('.','(')
+        self.expression = reverse
+        # convert the reverse expression to postfix
+        self.infixToPostfix()
+        # reverse the result again 
+        self.expression = self.expression[::-1]
         self.notation = 'prefix'
 
     def postfixToInfix(self) :
@@ -284,9 +250,9 @@ class Expression :
                 # char is an operand
                 operands.push(char)
         # end of the loop
-        # the answer is at the top of operands stack
-        self.convertTo(previousForm)
         # convert expression to the original form
+        self.convertTo(previousForm)
+        # the answer is at the top of operands stack
         return operands.pop()
     
 
