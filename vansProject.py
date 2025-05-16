@@ -6,13 +6,11 @@ class ListNode :
 class LinkList :
     def __init__ (self) :
         self.first = ListNode()
-        # circular link list : last element points the first element
+        # circular link list 
         self.first.link = self.first 
         self.last = self.first
 
     def insertAtEnd(self,x) :
-        # q will be the last element of list
-        # so it should point first element (circular list) 
         q = ListNode(x,self.first)
         self.last.link = q
         self.last = self.last.link
@@ -42,18 +40,15 @@ class LinkList :
             # L1 still has items (L2 empty)
             last.link = q
             while q.link != l1.first : 
-                # finding the last item of list
                 q = q.link
             last = q
         elif p != l2.first :
             # L2 still has items (L1 empty)
             last.link = p
             while p.link != l2.first :
-                # finding the last item of list
                 p = p.link
             last = p
-        # last shows the last item of merge list 
-        # it should point first of the merge list (circular list)
+        # circular list
         last.link = self.first 
 
 
@@ -76,7 +71,6 @@ class Stack :
     def __init__ (self) :
         self.top = ListNode()
     def push (self,x) :
-        # top.link shows top of the stack
         q = ListNode(x, self.top.link) 
         self.top.link = q
     def pop (self) :
@@ -92,16 +86,12 @@ class Queue :
     def __init__ (self) :
         self.rear = self.front = ListNode()
     def add (self,x) :
-        # rear shows the last element of the queue
         q = ListNode(x)
         self.rear.link = q
         self.rear = q
     def delete(self) :
         if self.front.link :
-        # front.link shows the first element in the queue
             if self.front.link == self.rear :
-                # queue has one item (it will be deleted)
-                # rear and front should point the same node again
                 self.rear = self.front
             x = self.front.link.data
             self.front.link = self.front.link.link
@@ -126,7 +116,6 @@ class Expression :
         self.postfixToInfix()
         # reverse the result again
         reverse = self.expression[::-1]
-        # replace '(' ')'
         reverse = reverse.replace(')','.')
         reverse = reverse.replace('(',')')
         reverse = reverse.replace('.','(')
@@ -137,7 +126,6 @@ class Expression :
     def infixToPrefix (self) :
         # reverse the expression
         reverse = self.expression[::-1]
-        # replace '(' ')'
         reverse = reverse.replace(')','.')
         reverse = reverse.replace('(',')')
         reverse = reverse.replace('.','(')
@@ -173,7 +161,6 @@ class Expression :
         operators = Stack()
         postfix = ''
         self.expression = f'({self.expression})'
-        # add () so the loop will unstack everything at the end
         for char in self.expression :
             if char in Expression.operatorsList :
                 # char is an operator
@@ -200,7 +187,6 @@ class Expression :
             else :
                 # char is an operand
                 postfix += char
-        # end of the loop
         self.expression = postfix
         self.notation = 'postfix'
 
@@ -213,11 +199,9 @@ class Expression :
             elif self.notation == 'postfix' :
                 self.postfixToInfix()
             else :
-                # self Notation == infix (selected form is prefix or postfix)
                 if selectedForm == 'prefix' :
                     self.infixToPrefix()
                 else :
-                    # selected form is postfix
                     self.infixToPostfix()
     
     def evaluate (self) :
@@ -249,10 +233,8 @@ class Expression :
             else :
                 # char is an operand
                 operands.push(char)
-        # end of the loop
         # convert expression to the original form
         self.convertTo(previousForm)
-        # the answer is at the top of operands stack
         return operands.pop()
     
 
